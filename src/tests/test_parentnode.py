@@ -1,11 +1,4 @@
-import os
-import sys
-
-sys.path.append(os.path.join(os.path.dirname(__file__), "../"))
-
-from src.parentnode import ParentNode
-from src.leafnode import LeafNode
-
+from src.htmlnode import ParentNode, LeafNode
 import unittest
 
 

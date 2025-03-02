@@ -1,11 +1,5 @@
-import os
-import sys
-
-sys.path.append(os.path.join(os.path.dirname(__file__), "../"))
-
 import unittest
-
-from src.leafnode import LeafNode
+from src.htmlnode import LeafNode
 
 
 class TestLeafNode(unittest.TestCase):

@@ -1,9 +1,10 @@
+from src.htmlnode import LeafNode
 from enum import Enum
 
 
 # Supported markdown styles
 class TextType(Enum):
-    NORMALE = "normal"
+    NORMAL = "normal"
     BOLD = "bold"
     ITALIC = "italic"
     CODE = "code"
@@ -30,3 +31,33 @@ class TextNode:
     # of its properties. 
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
+
+def text_node_to_html_node(text_node):
+
+    # Check if caller provides a TextNode argument
+    if not isinstance(text_node, TextNode):
+        raise TypeError("Argument must be a TextNode object.")
+
+    # dReturn a LeafNode with the correct HTML tags for each type of TextType
+    match text_node.text_type:
+        case TextType.NORMAL:
+            return LeafNode(value=text_node.text)
+        case TextType.BOLD:
+            return LeafNode(tag="b", value=text_node.text)
+        case TextType.ITALIC:
+            return LeafNode(tag="i", value=text_node.text)
+        case TextType.CODE:
+            return LeafNode(tag="code", value=text_node.text)
+        case TextType.LINKS:
+            return LeafNode(
+                tag="a", value=text_node.text, props={"href": f"{text_node.url}"}
+            )
+        case TextType.IMAGES:
+            return LeafNode(
+                value="",
+                tag="img",
+                props={"src": f"{text_node.url}", "alt": f"{text_node.text}"},
+            )
+        case _:
+            # TextType was not implemented or of unknown oragin
+            raise ValueError("Unknown TextType")
