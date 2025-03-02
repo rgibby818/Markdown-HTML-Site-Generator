@@ -8,7 +8,7 @@ class TextType(Enum):
     BOLD = "bold"
     ITALIC = "italic"
     CODE = "code"
-    LINKS = "links"
+    LINKS= "links"
     IMAGES = "images"
 
 
@@ -38,7 +38,7 @@ def text_node_to_html_node(text_node):
     if not isinstance(text_node, TextNode):
         raise TypeError("Argument must be a TextNode object.")
 
-    # dReturn a LeafNode with the correct HTML tags for each type of TextType
+    # Return a LeafNode with the correct HTML tags for each type of TextType
     match text_node.text_type:
         case TextType.NORMAL:
             return LeafNode(value=text_node.text)
@@ -60,4 +60,4 @@ def text_node_to_html_node(text_node):
             )
         case _:
             # TextType was not implemented or of unknown oragin
-            raise ValueError("Unknown TextType")
+            raise ValueError(f"invalid text type: {text_node.text_type}")
