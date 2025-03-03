@@ -1,3 +1,6 @@
+# This file contains functions that read markdown text and convert them to a Textnode Object.
+
+
 import re
 from src.textnode import TextNode, TextType
 from src.extract_markdown import extract_markdown_images, extract_markdown_links
@@ -46,21 +49,20 @@ def split_nodes_image(old_nodes):
     for node in old_nodes:
         matches = extract_markdown_images(node.text)
         if len(matches) == 0:
-            new_node.append(TextNode(f"{node.text}", node.text_type))
-            break
+            new_node.append(TextNode(f"{node.text}", node.text_type, node.url))
+            continue
         sections = re.split(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", node.text)
         for string in sections:
-            for alt, url in matches:
-                if alt == string:
-                    new_node.append(TextNode(alt, TextType.IMAGES, url))
-                    break
-                elif url in string:
-                    break
-                else:
-                    if alt == matches[-1][0]:
-                        if len(string) != 0:
-                            new_node.append(TextNode(string, TextType.NORMAL))
-                    continue
+            if string != '':
+                for text, link in matches:
+                    if string == text:
+                        new_node.append(TextNode(string, TextType.IMAGES, link))
+                        break
+                    elif string == link:
+                        break
+                    elif text == matches[-1][0]:
+                        new_node.append(TextNode(string, TextType.NORMAL))
+                        break
     return new_node
 
 
@@ -74,25 +76,49 @@ def split_nodes_image(old_nodes):
 #       TextNode("to a website", normal, none)
 #   ]
 def split_nodes_links(old_nodes):
-        new_nodes = []
-        for node in old_nodes:
-            matches = extract_markdown_links(node.text)
-            if len(matches) == 0:
-                new_nodes.append(TextNode(f"{node.text}", node.text_type))
-                break
-            sections = re.split(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", node.text)
-            for string in sections:
-                for text, url in matches:
-                    if text == string:
-                        new_nodes.append(TextNode(text, TextType.LINKS, url))
+    new_node = []
+    for node in old_nodes:
+        matches = extract_markdown_links(node.text)
+        if len(matches) == 0:
+            new_node.append(TextNode(f"{node.text}", node.text_type, node.url))
+            continue
+        sections = re.split(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", node.text)
+        for string in sections:
+            if string != '':
+                for text, link in matches:
+                    if string == text:
+                        new_node.append(TextNode(string, TextType.LINKS, link))
                         break
-                    elif url in string:
+                    elif string == link:
                         break
-                    else:
-                        if text == matches[-1][0]:
-                            if len(string) != 0:
-                                new_nodes.append(TextNode(string, TextType.NORMAL))
-                        continue
-        return new_nodes
+                    elif text == matches[-1][0]:
+                        new_node.append(TextNode(string, TextType.NORMAL))
+                        break
+    return new_node
 
 
+# Returns a list of TextNodes from a link of markdown
+# Example:
+# "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+# Returns:
+# #   [
+#     TextNode("This is ", TextType.TEXT),
+#     TextNode("text", TextType.BOLD),
+#     TextNode(" with an ", TextType.TEXT),
+#     TextNode("italic", TextType.ITALIC),
+#     TextNode(" word and a ", TextType.TEXT),
+#     TextNode("code block", TextType.CODE),
+#     TextNode(" and an ", TextType.TEXT),
+#     TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+#     TextNode(" and a ", TextType.TEXT),
+#     TextNode("link", TextType.LINK, "https://boot.dev"),
+# ]
+def text_to_textnode(text):
+    new_node = split_nodes_delimiter([TextNode(text, TextType.NORMAL),], "**", TextType.BOLD)
+    new_node = split_nodes_delimiter(new_node, "__", TextType.BOLD)
+    new_node = split_nodes_delimiter(new_node, "*", TextType.ITALIC)
+    new_node = split_nodes_delimiter(new_node, "_", TextType.ITALIC)
+    new_node = split_nodes_delimiter(new_node, "`", TextType.CODE)
+    new_node = split_nodes_image(new_node)
+    new_node = split_nodes_links(new_node)
+    return new_node

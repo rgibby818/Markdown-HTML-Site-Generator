@@ -1,6 +1,6 @@
 import unittest
 
-from src.split_markdown import split_nodes_delimiter, split_nodes_image, split_nodes_links
+from src.split_markdown import split_nodes_delimiter, split_nodes_image, split_nodes_links, text_to_textnode
 
 from src.textnode import TextNode, TextType
 
@@ -86,6 +86,38 @@ class Test_Split_Markdown(unittest.TestCase):
                 TextNode("This is text with no link", TextType.NORMAL),
             ],
             new_no_link_node
+        )
+
+
+    def test_text_to_textnodes(self):
+        text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        node = text_to_textnode(text)
+        self.assertListEqual(
+            [
+    TextNode("This is ", TextType.NORMAL),
+    TextNode("text", TextType.BOLD),
+    TextNode(" with an ", TextType.NORMAL),
+    TextNode("italic", TextType.ITALIC),
+    TextNode(" word and a ", TextType.NORMAL),
+    TextNode("code block", TextType.CODE),
+    TextNode(" and an ", TextType.NORMAL),
+    TextNode("obi wan image", TextType.IMAGES, "https://i.imgur.com/fJRm4Vk.jpeg"),
+    TextNode(" and a ", TextType.NORMAL),
+    TextNode("link", TextType.LINKS, "https://boot.dev"),
+            ],
+            node
+        )
+
+        text = "**Look** at this image of a cat ![cat](https://image/of/cat.png) " # <- Trailing space test
+        node = text_to_textnode(text)
+        self.assertListEqual(
+            [
+                TextNode("Look", TextType.BOLD),
+                TextNode(" at this image of a cat ", TextType.NORMAL),
+                TextNode("cat", TextType.IMAGES, "https://image/of/cat.png"),
+                TextNode(" ", TextType.NORMAL),
+            ],
+            node
         )
 
 if __name__ == "__main__":
