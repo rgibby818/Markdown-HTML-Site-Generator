@@ -1,3 +1,5 @@
+# This file containes TextNode and all child classe blueprints
+
 from src.htmlnode import LeafNode
 from enum import Enum
 
@@ -8,7 +10,7 @@ class TextType(Enum):
     BOLD = "bold"
     ITALIC = "italic"
     CODE = "code"
-    LINKS= "links"
+    LINKS = "links"
     IMAGES = "images"
 
 
@@ -28,9 +30,10 @@ class TextNode:
         return self.__dict__ == object.__dict__
 
     # Returns a string of the class of TextNode object with the values
-    # of its properties. 
+    # of its properties.
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
+
 
 def text_node_to_html_node(text_node):
 

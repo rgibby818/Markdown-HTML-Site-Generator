@@ -1,5 +1,4 @@
-# This file contains functions that read markdown text and convert them to a Textnode Object.
-
+# This file contains functions that read  inline markdown text and convert them to a Textnode Object.
 
 import re
 from src.textnode import TextNode, TextType
@@ -43,7 +42,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 #   [
 #       TextNode("This is atext with a image ", normal, None),
 #       TextNode("an image", images, "image.png")
-#   ] 
+#   ]
 def split_nodes_image(old_nodes):
     new_node = []
     for node in old_nodes:
@@ -53,7 +52,7 @@ def split_nodes_image(old_nodes):
             continue
         sections = re.split(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", node.text)
         for string in sections:
-            if string != '':
+            if string != "":
                 for text, link in matches:
                     if string == text:
                         new_node.append(TextNode(string, TextType.IMAGES, link))
@@ -84,7 +83,7 @@ def split_nodes_links(old_nodes):
             continue
         sections = re.split(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", node.text)
         for string in sections:
-            if string != '':
+            if string != "":
                 for text, link in matches:
                     if string == text:
                         new_node.append(TextNode(string, TextType.LINKS, link))
@@ -114,7 +113,13 @@ def split_nodes_links(old_nodes):
 #     TextNode("link", TextType.LINK, "https://boot.dev"),
 # ]
 def text_to_textnode(text):
-    new_node = split_nodes_delimiter([TextNode(text, TextType.NORMAL),], "**", TextType.BOLD)
+    new_node = split_nodes_delimiter(
+        [
+            TextNode(text, TextType.NORMAL),
+        ],
+        "**",
+        TextType.BOLD,
+    )
     new_node = split_nodes_delimiter(new_node, "__", TextType.BOLD)
     new_node = split_nodes_delimiter(new_node, "*", TextType.ITALIC)
     new_node = split_nodes_delimiter(new_node, "_", TextType.ITALIC)

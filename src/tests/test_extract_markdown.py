@@ -2,6 +2,7 @@ import unittest
 
 from src.extract_markdown import extract_markdown_images, extract_markdown_links
 
+
 class TestMarkdownImages(unittest.TestCase):
 
     def test_extract_markdown_images(self):
@@ -18,8 +19,9 @@ class TestMarkdownImages(unittest.TestCase):
         self.assertListEqual([], extract_markdown_images(""))
         self.assertListEqual([], no_matches)
         self.assertListEqual(
-            [("image", "https://www.image.com"), ("image2", "https://www.image2.com")], multiple_matches
-            )
+            [("image", "https://www.image.com"), ("image2", "https://www.image2.com")],
+            multiple_matches,
+        )
 
 
 class TestMarkdownLinks(unittest.TestCase):
@@ -37,8 +39,10 @@ class TestMarkdownLinks(unittest.TestCase):
         self.assertListEqual([("link", "https://www.google.com")], matches)
         self.assertListEqual([], extract_markdown_links(""))
         self.assertListEqual([], no_match)
-        self.assertListEqual([("link", "https://www.google.com"), ("link2", "https://www.duckduckgo.com")], multiple_matches
-                             )
-
-
-
+        self.assertListEqual(
+            [
+                ("link", "https://www.google.com"),
+                ("link2", "https://www.duckduckgo.com"),
+            ],
+            multiple_matches,
+        )

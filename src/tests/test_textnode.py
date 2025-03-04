@@ -2,11 +2,13 @@ import unittest
 
 from src.htmlnode import LeafNode, HTMLNode
 from src.textnode import TextType, TextNode, text_node_to_html_node
+
 text_node_error_message = "FAILED TEST: TextNode did not output the correct output"
 
 text_node_to_html_node_error_message = (
     "FAILED TEST: text_node_to_html_node() did not output the correct output"
 )
+
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
@@ -61,6 +63,7 @@ class TestTextNode(unittest.TestCase):
         node = TextNode("textnode with none as url", TextType.BOLD)
         self.assertIs(node.url, None, msg=text_node_error_message)
 
+
 class TestTextNodeToHTMLNode(unittest.TestCase):
     def test_text(self):
         node = TextNode("This is a text node", TextType.NORMAL)
@@ -83,6 +86,7 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "b")
         self.assertEqual(html_node.value, "This is bold")
+
 
 if __name__ == "__main__":
     unittest.main()
