@@ -3,7 +3,6 @@ from shutil import copy, rmtree
 
 
 def move_static_to_public():
-    print(os.getcwd())
     public_folder = os.path.join(os.getcwd(), "public")
     static_folder = os.path.join(os.getcwd(), "static")
 
