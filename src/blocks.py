@@ -2,7 +2,7 @@
 
 
 from enum import Enum
-from src.split_markdown import split_nodes_delimiter, split_nodes_image, split_nodes_links
+from split_markdown import split_nodes_delimiter, split_nodes_image, split_nodes_links
 
 
 class BlockType(Enum):

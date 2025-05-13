@@ -1,7 +1,7 @@
-from src.blocks import block_to_block_type, BlockType, markdown_to_blocks
-from src.htmlnode import HTMLNode, ParentNode, LeafNode
-from src.textnode import TextNode, text_node_to_html_node, TextType
-from src.split_markdown import text_to_textnode
+from blocks import block_to_block_type, BlockType, markdown_to_blocks
+from htmlnode import HTMLNode, ParentNode, LeafNode
+from textnode import TextNode, text_node_to_html_node, TextType
+from split_markdown import text_to_textnodes
 
 
 def markdown_to_html_node(markdown):
@@ -31,7 +31,7 @@ def block_to_html_node(block):
 
 
 def text_to_children(text):
-    text_nodes = text_to_textnode(text)
+    text_nodes = text_to_textnodes(text)
     children = []
     for text_node in text_nodes:
         html_node = text_node_to_html_node(text_node)

@@ -1,6 +1,6 @@
 # This file containes TextNode and all child classe blueprints
 
-from src.htmlnode import LeafNode
+from htmlnode import LeafNode
 from enum import Enum
 
 

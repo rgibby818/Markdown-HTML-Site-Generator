@@ -1,8 +1,8 @@
 # This file contains functions that read  inline markdown text and convert them to a Textnode Object.
 
 import re
-from src.textnode import TextNode, TextType
-from src.extract_markdown import extract_markdown_images, extract_markdown_links
+from textnode import TextNode, TextType
+from extract_markdown import extract_markdown_images, extract_markdown_links
 
 
 # Return a list of TextNode that contain delimiter formats.
@@ -112,18 +112,11 @@ def split_nodes_links(old_nodes):
 #     TextNode(" and a ", TextType.TEXT),
 #     TextNode("link", TextType.LINK, "https://boot.dev"),
 # ]
-def text_to_textnode(text):
-    new_node = split_nodes_delimiter(
-        [
-            TextNode(text, TextType.NORMAL),
-        ],
-        "**",
-        TextType.BOLD,
-    )
-    new_node = split_nodes_delimiter(new_node, "__", TextType.BOLD)
-    new_node = split_nodes_delimiter(new_node, "*", TextType.ITALIC)
-    new_node = split_nodes_delimiter(new_node, "_", TextType.ITALIC)
-    new_node = split_nodes_delimiter(new_node, "`", TextType.CODE)
-    new_node = split_nodes_image(new_node)
-    new_node = split_nodes_links(new_node)
-    return new_node
+def text_to_textnodes(text):
+    nodes = [TextNode(text, TextType.NORMAL)]
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_links(nodes)
+    return nodes

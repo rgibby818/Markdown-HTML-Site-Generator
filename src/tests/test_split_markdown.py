@@ -1,13 +1,13 @@
 import unittest
 
-from src.split_markdown import (
+from split_markdown import (
     split_nodes_delimiter,
     split_nodes_image,
     split_nodes_links,
-    text_to_textnode,
+    text_to_textnodes,
 )
 
-from src.textnode import TextNode, TextType
+from textnode import TextNode, TextType
 
 
 class Test_Split_Markdown(unittest.TestCase):
@@ -97,7 +97,7 @@ class Test_Split_Markdown(unittest.TestCase):
 
     def test_text_to_textnodes(self):
         text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
-        node = text_to_textnode(text)
+        node = text_to_textnodes(text)
         self.assertListEqual(
             [
                 TextNode("This is ", TextType.NORMAL),
@@ -117,7 +117,7 @@ class Test_Split_Markdown(unittest.TestCase):
         )
 
         text = "**Look** at this image of a cat ![cat](https://image/of/cat.png) "  # <- Trailing space test
-        node = text_to_textnode(text)
+        node = text_to_textnodes(text)
         self.assertListEqual(
             [
                 TextNode("Look", TextType.BOLD),
