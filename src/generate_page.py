@@ -4,6 +4,24 @@ from markdown_to_html import markdown_to_html_node
 from extract_title import extract_title
 
 
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    # If dir_path is a file generate page.
+    if not os.path.isdir(dir_path_content):
+        return generate_page(dir_path_content, template_path, dest_dir_path)
+
+    # List content and loop through recursivaly calling until all pages are generated
+    files = os.listdir(dir_path_content)
+    for file in files:
+        file_path = os.path.join(dir_path_content, file)
+        destiantion = os.path.join(dest_dir_path, file)
+        if os.path.isdir(file_path):
+            os.mkdir(destiantion)
+            generate_pages_recursive(file_path, template_path, destiantion)
+        else:
+            # Source files are .md need to replace with .html for destiantion
+            generate_page(file_path, template_path, destiantion.split(".")[0] + ".html")
+
+
 def generate_page(from_path, template_path, dest_path):
     print(
         f"Generating page from {from_path} to {dest_path} using tempalte {template_path}\n"

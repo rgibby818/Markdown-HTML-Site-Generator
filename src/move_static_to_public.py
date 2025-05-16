@@ -15,8 +15,6 @@ def move_static_to_public():
     if if_folder(static_folder):
         copy_files(static_folder, public_folder)
 
-    pass
-
 
 # Check if a path exist if create_folder is set to True it will create that folder
 def if_folder(path, create_folder=False):
