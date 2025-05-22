@@ -7,6 +7,7 @@ from generate_page import generate_pages_recursive, generate_page
 def main():
 
     # Basepath should be set to your github repository name
+    basepath = None
     try:
         basepath = sys.argv[1]
     except IndexError:

@@ -19,7 +19,9 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, bas
             generate_pages_recursive(file_path, template_path, destiantion, basepath)
         else:
             # Source files are .md need to replace with .html for destiantion
-            generate_page(file_path, template_path, destiantion.split(".")[0] + ".html", basepath)
+            generate_page(
+                file_path, template_path, destiantion.split(".")[0] + ".html", basepath
+            )
 
 
 def generate_page(from_path, template_path, dest_path, basepath):
@@ -35,8 +37,7 @@ def generate_page(from_path, template_path, dest_path, basepath):
     # Open template path and replace the placeholder {{ title }} {{ content }} with the (title) (generated_html)
     html = template_to_html(template_path, title, generated_html)
     # Replace all instances of href="/" and src="/" with href="basepath" and src="basepath"
-    html = html.replace('href="/"', f'href="{basepath}')
-    html = html.replace('src="/"', f'src="{basepath}')
+    html = update_base_paths(html, basepath)
 
     # # Write the html to the destition path
     if not os.path.exists(os.path.dirname(dest_path)):
@@ -70,3 +71,19 @@ def template_to_html(template_path, title, generated_html):
     html = re.sub(r"{{ Title }}", title, html)
     html = re.sub(r"{{ Content }}", generated_html, html)
     return html
+
+
+def update_base_paths(html, basepath):
+    basepath = basepath.rstrip("/")
+
+    # Pattern to match href="/..." or src='/...'
+    pattern = r'(href|src)\s*=\s*["\'](/[^"\']*)["\']'
+
+    # Replacement function to preserve quotes
+    def replacer(match):
+        attr = match.group(1)
+        path = match.group(2)
+        quote = '"' if '"' in match.group(0) else "'"
+        return f"{attr}={quote}{basepath}{path}{quote}"
+
+    return re.sub(pattern, replacer, html)
