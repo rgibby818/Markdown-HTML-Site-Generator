@@ -2,18 +2,18 @@ import os
 from shutil import copy, rmtree
 
 
-def move_static_to_public():
-    public_folder = os.path.join(os.getcwd(), "public")
+def move_static_to_docs():
+    doc_folder = os.path.join(os.getcwd(), "docs")
     static_folder = os.path.join(os.getcwd(), "static")
 
     # delete everything in the public folder
-    if_folder(public_folder, create_folder=True)
-    delete_files_in_path(public_folder)
+    if_folder(doc_folder, create_folder=True)
+    delete_files_in_path(doc_folder)
 
-    # Copy items from the static folder into the public folder
+    # Copy items from the static folder into the docs folder
 
     if if_folder(static_folder):
-        copy_files(static_folder, public_folder)
+        copy_files(static_folder, doc_folder)
 
 
 # Check if a path exist if create_folder is set to True it will create that folder
