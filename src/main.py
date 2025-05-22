@@ -7,11 +7,10 @@ from generate_page import generate_pages_recursive, generate_page
 def main():
 
     # Basepath should be set to your github repository name
-    basepath = None
-    try:
+    basepath = "/"
+    if len(sys.argv) > 1:
         basepath = sys.argv[1]
-    except IndexError:
-        basepath = "/"
+
 
     cwd = os.getcwd()
     template_file = os.path.join(cwd, "template.html")

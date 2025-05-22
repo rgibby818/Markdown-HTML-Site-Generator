@@ -37,7 +37,8 @@ def generate_page(from_path, template_path, dest_path, basepath):
     # Open template path and replace the placeholder {{ title }} {{ content }} with the (title) (generated_html)
     html = template_to_html(template_path, title, generated_html)
     # Replace all instances of href="/" and src="/" with href="basepath" and src="basepath"
-    html = update_base_paths(html, basepath)
+    html = html.replace('href="/', 'href="' + basepath)
+    html = html.replace('src="/', 'src="' + basepath)
 
     # # Write the html to the destition path
     if not os.path.exists(os.path.dirname(dest_path)):
@@ -68,22 +69,6 @@ def return_file(path):
 # Returns the template html document with a title and generated html inside the body
 def template_to_html(template_path, title, generated_html):
     html = return_file(template_path)
-    html = re.sub(r"{{ Title }}", title, html)
-    html = re.sub(r"{{ Content }}", generated_html, html)
+    html = html.replace("{{ Title }}", title)
+    html =html.replace("{{ Content }}", generated_html)
     return html
-
-
-def update_base_paths(html, basepath):
-    basepath = basepath.rstrip("/")
-
-    # Pattern to match href="/..." or src='/...'
-    pattern = r'(href|src)\s*=\s*["\'](/[^"\']*)["\']'
-
-    # Replacement function to preserve quotes
-    def replacer(match):
-        attr = match.group(1)
-        path = match.group(2)
-        quote = '"' if '"' in match.group(0) else "'"
-        return f"{attr}={quote}{basepath}{path}{quote}"
-
-    return re.sub(pattern, replacer, html)
